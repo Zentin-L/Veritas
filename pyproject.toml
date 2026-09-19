@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "veritas"
+version = "0.1.0"
+description = "Zero-cost, source-grounded PDF knowledge assistant"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "PyMuPDF>=1.24,<2",
+  "numpy>=1.26,<3",
+  "faiss-cpu>=1.8,<2",
+  "rank-bm25>=0.2,<1",
+  "sentence-transformers>=3,<4",
+  "pydantic>=2,<3",
+]
+
+[tool.setuptools]
+packages = ["veritas"]
