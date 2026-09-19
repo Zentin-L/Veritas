@@ -4,4 +4,6 @@ __pycache__/
 .env
 storage/
 tmp_cli_*
+manual_demo_*
+manual_demo.pdf
 *.egg-info/
