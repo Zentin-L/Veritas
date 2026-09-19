@@ -53,11 +53,24 @@ Context:
 {context}'''
 
 
+def _chunk_key(value: str) -> str:
+    match = re.search(r"p\d+-c\d+$", value.lower())
+    return match.group(0) if match else value.lower()
+
+
 def _validated_answer(raw: str, valid_ids: set[str]) -> GeneratedAnswer:
     answer = extract_json(raw)
     sentences = []
+    valid_by_key = {_chunk_key(item): item for item in valid_ids}
     for sentence in answer.sentences:
-        citations = [citation for citation in sentence.citations if citation in valid_ids]
+        citations: list[str] = []
+        for citation in sentence.citations:
+            if citation in valid_ids:
+                citations.append(citation)
+                continue
+            key = _chunk_key(citation)
+            if key in valid_by_key:
+                citations.append(valid_by_key[key])
         if citations:
             sentences.append(sentence.model_copy(update={"citations": citations}))
     if answer.sentences and not sentences:

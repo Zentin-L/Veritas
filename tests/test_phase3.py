@@ -62,3 +62,14 @@ def test_answer_abstains_when_provider_fails() -> None:
     answer = answer_question("What does it say?", [result()], FailingProvider())
     assert answer.abstain is True
     assert answer.sentences == []
+
+
+def test_answer_accepts_equivalent_chunk_id_patterns() -> None:
+    provider = FakeProvider(['{"abstain": false, "sentences": [{"text": "Claim.", "citations": ["doc-p1-c1"]}]}'])
+    answer = answer_question(
+        "What does it say?",
+        [RetrievalResult(Chunk("tmp_cli_demo.pdf-p1-c1", "The document says the sky is blue.", "tmp_cli_demo.pdf", 1, 0, 35), 0.8, 1.0, 0.03)],
+        provider,
+    )
+    assert answer.sentences[0].citations == ["tmp_cli_demo.pdf-p1-c1"]
+    assert answer.abstain is False
